@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: system-ui, -apple-system, sans-serif;
+
+  /* Color System - Dark scholarly theme with amber accents */
+  --color-background: 10 10 12;
+  --color-foreground: 250 250 250;
+
+  --color-card: 24 24 27;
+  --color-card-foreground: 250 250 250;
+
+  --color-popover: 24 24 27;
+  --color-popover-foreground: 250 250 250;
+
+  --color-primary: 251 191 36;
+  --color-primary-foreground: 10 10 12;
+
+  --color-secondary: 63 63 70;
+  --color-secondary-foreground: 250 250 250;
+
+  --color-muted: 39 39 42;
+  --color-muted-foreground: 161 161 170;
+
+  --color-accent: 251 191 36;
+  --color-accent-foreground: 10 10 12;
+
+  --color-destructive: 239 68 68;
+  --color-destructive-foreground: 250 250 250;
+
+  --color-border: 39 39 42;
+  --color-input: 39 39 42;
+  --color-ring: 251 191 36;
+
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+.Toastify__toast {
+  background-color: rgb(var(--color-card)) !important;
+  color: rgb(var(--color-foreground)) !important;
+  border: 1px solid rgb(var(--color-border)) !important;
+}
+
+.Toastify__toast--success {
+  border-left: 4px solid rgb(var(--color-primary)) !important;
+}
+
+.Toastify__toast--error {
+  border-left: 4px solid rgb(var(--color-destructive)) !important;
+}
