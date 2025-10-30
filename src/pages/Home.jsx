@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { BookOpen, Clock, Filter, Search, ShoppingCart } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { livrosAPI } from "../api/api"
-import { useCart } from "../context/CartContext"
-import { useAuth } from "../auth/AuthProvider"
 import { toast } from "react-toastify"
-import { BookOpen, ShoppingCart, Search, Filter, Clock } from "lucide-react"
+import { livrosAPI } from "../api/api"
+import { useAuth } from "../auth/AuthProvider"
+import { useCart } from "../context/CartContext"
 
 export const Home = () => {
   const [livros, setLivros] = useState([])
@@ -176,10 +176,21 @@ export const Home = () => {
                 onClick={() => handleBookClick(livro.id)}
                 className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
               >
-                {/* Book Cover Placeholder */}
-                <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                  <BookOpen className="h-16 w-16 text-primary/40" />
+                {/* Book Cover */}
+                <div className="aspect-[3/4] overflow-hidden">
+                  {livro.capaPath ? (
+                    <img
+                      src={`http://localhost:8080/livros/capa/${livro.capaPath}`}
+                      alt={livro.titulo}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                      <BookOpen className="h-16 w-16 text-primary/40" />
+                    </div>
+                  )}
                 </div>
+
 
                 {/* Book Info */}
                 <div className="p-4">
