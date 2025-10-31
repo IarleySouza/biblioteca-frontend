@@ -71,8 +71,18 @@ export const MeusLivros = () => {
                 className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
               >
                 {/* Book Cover */}
-                <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                  <BookOpen className="h-16 w-16 text-primary/40" />
+                <div className="aspect-[3/4] overflow-hidden">
+                  {livro.capaPath ? (
+                    <img
+                      src={`http://localhost:8080/livros/capa/${livro.capaPath}`}
+                      alt={livro.titulo}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                      <BookOpen className="h-16 w-16 text-primary/40" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Book Info */}

@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { vendaAPI } from "../api/api"
+import { Calendar, DollarSign, Package } from "lucide-react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Package, Calendar, DollarSign } from "lucide-react"
+import { vendaAPI } from "../api/api"
 
 export const MeusPedidos = () => {
   const [pedidos, setPedidos] = useState([])
@@ -76,7 +76,7 @@ export const MeusPedidos = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4" />
-                        <span>R$ {pedido.preco.toFixed(2)}</span>
+                        <span>R$ {pedido.valor?.toFixed(2) ?? "0.00"}</span>
                       </div>
                     </div>
                   </div>
