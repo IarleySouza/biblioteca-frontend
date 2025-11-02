@@ -83,7 +83,7 @@ function App() {
               <Route
                 path="/funcionario/livros"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMINISTRADOR"]}>
                     <FuncionarioLivros />
                   </PrivateRoute>
                 }
@@ -91,7 +91,7 @@ function App() {
               <Route
                 path="/funcionario/livro/:id"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMINISTRADOR"]}>
                     <FuncionarioLivroDetalhes />
                   </PrivateRoute>
                 }
@@ -99,7 +99,7 @@ function App() {
               <Route
                 path="/cadastrar-livro"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMINISTRADOR"]}>
                     <CadastrarLivro />
                   </PrivateRoute>
                 }
@@ -108,7 +108,7 @@ function App() {
               <Route
                 path="/admin/clientes"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_FUNCIONARIO", "ROLE_ADMINISTRADOR"]}>
                     <GerenciarClientes />
                   </PrivateRoute>
                 }
@@ -117,7 +117,7 @@ function App() {
               <Route
                 path="/admin/funcionarios"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_ADMINISTRADOR"]}>
                     <GerenciarFuncionarios />
                   </PrivateRoute>
                 }
@@ -125,7 +125,7 @@ function App() {
               <Route
                 path="/admin/cadastrar-funcionario"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_ADMINISTRADOR"]}>
                     <CadastrarFuncionario />
                   </PrivateRoute>
                 }
@@ -135,7 +135,7 @@ function App() {
               <Route
                 path="/admin/dashboard"
                 element={
-                  <PrivateRoute rolesAllowed={["ROLE_ADMIN"]}>
+                  <PrivateRoute rolesAllowed={["ROLE_ADMINISTRADOR"]}>
                     <AdminDashboard />
                   </PrivateRoute>
                 }

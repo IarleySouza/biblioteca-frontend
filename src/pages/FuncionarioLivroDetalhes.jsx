@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { livrosAPI } from "../api/api"
+import { ArrowLeft, BookOpen, Building2, Calendar, Edit, FileText, Globe, Power, Save, X } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
-import { BookOpen, ArrowLeft, Calendar, Globe, Building2, Edit, Power, Save, X, FileText } from "lucide-react"
+import { livrosAPI } from "../api/api"
 
 export const FuncionarioLivroDetalhes = () => {
   const { id } = useParams()
@@ -180,9 +180,20 @@ export const FuncionarioLivroDetalhes = () => {
           {/* Book Info */}
           <div className="lg:col-span-1">
             <div className="bg-card border border-border rounded-xl p-6 sticky top-8">
-              <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center rounded-lg mb-4">
-                <BookOpen className="h-24 w-24 text-primary/40" />
-              </div>
+              {/* Book Cover */}
+                <div className="aspect-[3/4] overflow-hidden">
+                  {livro.capaPath ? (
+                    <img
+                      src={`http://localhost:8080/livros/capa/${livro.capaPath}`}
+                      alt={livro.titulo}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                      <BookOpen className="h-16 w-16 text-primary/40" />
+                    </div>
+                  )}
+                </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Status</span>

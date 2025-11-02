@@ -91,7 +91,7 @@ export const livrosAPI = {
 export const vendaAPI = {
   vender: (clienteId, livroId) => api.post(`/venda/vender?email=${clienteId}&livroId=${livroId}`),
   alugar: (clienteId, livroId) => api.post(`/venda/alugar?email=${clienteId}&livroId=${livroId}`),
-  getRelatorio: () => api.get("/adm/historico-vendas"),
+  getRelatorio: () => api.get("/venda/relatorio"),
   getRelatorioAluguel: () => api.get("/venda/relatorio-aluguel"),
 }
 

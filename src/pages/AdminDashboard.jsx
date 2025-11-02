@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { vendaAPI } from "../api/api"
+import { BookOpen, Calendar, DollarSign, TrendingUp, Users } from "lucide-react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
-import { TrendingUp, DollarSign, BookOpen, Users, Calendar } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { vendaAPI } from "../api/api"
 
 export const AdminDashboard = () => {
   const [relatorio, setRelatorio] = useState([])
@@ -180,19 +180,29 @@ export const AdminDashboard = () => {
             {getTopLivros().length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={getTopLivros()}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="titulo" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="titulo" tick={{ fill: "white" }} />
+                  <YAxis tick={{ fill: "white" }} />
                   <Tooltip
+                  cursor={{ fill: "hsl(var(--muted))", opacity: 0.15 }}
                     contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
+                      backgroundColor: "rgba(30, 30, 30, 0.9)", // fundo escuro semi-transparente
                       borderRadius: "8px",
+                      border: "none",
+                      color: "#fff", // texto branco
+                    }}
+                    itemStyle={{
+                      color: "#fff", // texto dos itens branco
+                    }}
+                    labelStyle={{
+                      color: "#fff", // texto do rótulo branco
+                      fontWeight: "bold",
                     }}
                   />
-                  <Bar dataKey="vendas" fill="#f59e0b" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="vendas" fill="#3b82f6" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+
             ) : (
               <div className="h-[300px] flex items-center justify-center text-muted-foreground">
                 Nenhuma venda registrada
@@ -239,26 +249,65 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Sales by Month */}
-        {getVendasPorMes().length > 0 && (
-          <div className="bg-card border border-border rounded-xl p-6 mb-8">
-            <h2 className="text-xl font-bold mb-6">Vendas por Mês</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={getVendasPorMes()}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="mes" stroke="hsl(var(--muted-foreground))" />
-                <YAxis stroke="hsl(var(--muted-foreground))" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Bar dataKey="vendas" fill="#10b981" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+{getVendasPorMes().length > 0 && (
+  <div className="bg-card border border-border rounded-xl p-6 mb-8">
+    <h2 className="text-xl font-bold mb-6">Vendas por Mês</h2>
+    <ResponsiveContainer width="100%" height={320}>
+      <BarChart
+        data={getVendasPorMes()}
+        margin={{ top: 20, right: 30, left: 0, bottom: 10 }}
+      >
+        <defs>
+          <linearGradient id="colorVendas" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#10b981" stopOpacity={0.9} />
+            <stop offset="100%" stopColor="#10b981" stopOpacity={0.2} />
+          </linearGradient>
+        </defs>
+
+        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
+        <XAxis
+          dataKey="mes"
+          tick={{ fill: "#fff", fontSize: 12, fontWeight: 500 }}
+          axisLine={false}
+        />
+        <YAxis
+          tick={{ fill: "#fff", fontSize: 12, fontWeight: 500 }}
+          axisLine={false}
+          tickFormatter={(v) => `${v}`}
+        />
+
+        <Tooltip
+          cursor={{ fill: "hsl(var(--muted))", opacity: 0.15 }}
+          contentStyle={{
+            backgroundColor: "hsl(var(--card))",
+            border: "1px solid hsl(var(--border))",
+            borderRadius: "10px",
+            color: "hsl(var(--foreground))",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+          }}
+          labelStyle={{ fontWeight: "600", marginBottom: "5px" }}
+          formatter={(value) => [`${value} vendas`, "Quantidade"]}
+        />
+
+        <Bar
+          dataKey="vendas"
+          fill="url(#colorVendas)"
+          radius={[8, 8, 0, 0]}
+          animationBegin={0}
+          animationDuration={1200}
+          animationEasing="ease-out"
+          isAnimationActive={true}
+        >
+          {getVendasPorMes().map((entry, index) => (
+            <Cell key={`cell-${index}`} cursor="pointer" />
+          ))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+)}
+
 
         {/* Recent Sales Table */}
         <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -301,7 +350,7 @@ export const AdminDashboard = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="font-semibold text-green-500">R$ {venda.preco.toFixed(2)}</div>
+                        <div className="font-semibold text-green-500">R$ {venda.preco?.toFixed(2) ?? "0.00"}</div>
                       </td>
                     </tr>
                   ))}

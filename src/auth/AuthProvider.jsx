@@ -1,7 +1,7 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect } from "react"
 import { jwtDecode } from "jwt-decode"
+import { createContext, useContext, useEffect, useState } from "react"
 
 const AuthContext = createContext(null)
 
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
   const isCliente = () => hasRole("ROLE_CLIENTE")
   const isFuncionario = () => hasRole("ROLE_FUNCIONARIO")
-  const isAdmin = () => hasRole("ROLE_ADMIN")
+  const isAdmin = () => hasRole("ROLE_ADMINISTRADOR")
 
   return (
     <AuthContext.Provider
