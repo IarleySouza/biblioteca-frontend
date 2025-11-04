@@ -82,10 +82,15 @@ export const livrosAPI = {
   toggleStatus: (id) => api.patch(`/livros/toggle-status/${id}`),
   getFuncionarioLivros: () => api.get("/funcionario/livros"),
   deletar: (id) => api.delete(`/livros/deletar/${id}`),
-  getPdf: (id) =>
-    api.get(`/livros/pdf/${id}`, {
-      responseType: "blob",
-    }),
+  getPdf: (id) => {
+  const token = localStorage.getItem("token")
+  return api.get(`/livros/pdf/${id}`, {
+    responseType: "blob",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+},
 }
 
 export const vendaAPI = {

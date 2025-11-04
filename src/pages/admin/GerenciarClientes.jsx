@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { adminAPI } from "../../api/api"
+import { Calendar, CreditCard, Search, Trash2, Users } from "lucide-react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { Users, Search, Trash2, Calendar, CreditCard } from "lucide-react"
+import { adminAPI } from "../../api/api"
 
 export const GerenciarClientes = () => {
   const [clientes, setClientes] = useState([])
@@ -155,7 +155,7 @@ export const GerenciarClientes = () => {
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="h-4 w-4" />
-                    <span>Nascimento: {formatDate(cliente.dataNascimento)}</span>
+                    <span>Nascimento: {formatDate(cliente.data_nascimento)}</span>
                   </div>
                 </div>
               </div>

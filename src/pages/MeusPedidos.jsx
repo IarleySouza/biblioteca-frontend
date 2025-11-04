@@ -76,7 +76,7 @@ export const MeusPedidos = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4" />
-                        <span>R$ {pedido.valor?.toFixed(2) ?? "0.00"}</span>
+                        <span>R$ {pedido.preco?.toFixed(2) ?? "0.00"}</span>
                       </div>
                     </div>
                   </div>

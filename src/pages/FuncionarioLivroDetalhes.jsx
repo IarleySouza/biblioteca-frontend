@@ -56,7 +56,7 @@ export const FuncionarioLivroDetalhes = () => {
         titulo: response.data.titulo || "",
         autor: response.data.autor || "",
         editora: response.data.editora || "",
-        anoPublicacao: response.data.anoPublicacao || "",
+        anoPublicacao: response.data.ano_publicacao || "",
         genero: response.data.genero || "",
         sinopse: response.data.sinopse || "",
         idioma: response.data.idioma || "",
@@ -80,7 +80,7 @@ export const FuncionarioLivroDetalhes = () => {
       console.error("Erro ao carregar PDF:", error)
     }
   }
-
+  
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData((prev) => ({
