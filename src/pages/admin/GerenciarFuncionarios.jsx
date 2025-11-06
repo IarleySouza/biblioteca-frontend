@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Calendar, MapPin, Phone, Search, Trash2, UserPlus, Users } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { adminAPI } from "../../api/api"
 import { toast } from "react-toastify"
-import { Users, UserPlus, Search, Trash2, Calendar, Phone, MapPin } from "lucide-react"
+import { adminAPI } from "../../api/api"
 
 export const GerenciarFuncionarios = () => {
   const [funcionarios, setFuncionarios] = useState([])
@@ -174,7 +174,7 @@ export const GerenciarFuncionarios = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="h-4 w-4" />
-                    <span>Nascimento: {formatDate(funcionario.dataNascimento)}</span>
+                    <span>Nascimento: {formatDate(funcionario.data_nascimento)}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Calendar className="h-4 w-4" />

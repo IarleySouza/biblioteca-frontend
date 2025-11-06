@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { ArrowLeft, Eye, EyeOff, Save, User } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "../auth/AuthProvider"
-import { clienteAPI } from "../api/api"
 import { toast } from "react-toastify"
-import { User, ArrowLeft, Save, Eye, EyeOff } from "lucide-react"
+import { clienteAPI } from "../api/api"
+import { useAuth } from "../auth/AuthProvider"
 
 export const Perfil = () => {
   const navigate = useNavigate()
@@ -19,7 +19,6 @@ export const Perfil = () => {
     email: "",
     cpf: "",
     data_nascimento: "",
-    endereco: "",
     senha: "",
     confirmarSenha: "",
   })
@@ -29,24 +28,30 @@ export const Perfil = () => {
   }, [])
 
   const loadClienteData = async () => {
-    try {
-      const response = await clienteAPI.getPerfil()
-      const cliente = response.data
-      setFormData({
-        nome: cliente.nome || "",
-        email: cliente.email || "",
-        cpf: cliente.cpf || "",
-        data_nascimento: cliente.data_nascimento || "",
-        endereco: cliente.endereco || "",
-        senha: "",
-        confirmarSenha: "",
-      })
-    } catch (error) {
-      toast.error("Erro ao carregar dados do perfil")
-    } finally {
-      setLoadingData(false)
-    }
+  try {
+    const response = await clienteAPI.getPerfil()
+    const cliente = response.data
+
+    // Converte a data para o formato aceito pelo input
+    const dataFormatada = cliente.data_nascimento
+      ? new Date(cliente.data_nascimento).toISOString().split("T")[0]
+      : ""
+
+    setFormData({
+      nome: cliente.nome || "",
+      email: cliente.email || "",
+      cpf: cliente.cpf || "",
+      data_nascimento: dataFormatada,
+      senha: "",
+      confirmarSenha: "",
+    })
+  } catch (error) {
+    toast.error("Erro ao carregar dados do perfil")
+  } finally {
+    setLoadingData(false)
   }
+}
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -73,7 +78,6 @@ export const Perfil = () => {
         email: formData.email,
         cpf: formData.cpf,
         data_nascimento: formData.data_nascimento,
-        endereco: formData.endereco,
       }
 
       // Only include password if it was provided
@@ -194,22 +198,6 @@ export const Perfil = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
                 required
-              />
-            </div>
-
-            {/* Endereço */}
-            <div>
-              <label htmlFor="endereco" className="block text-sm font-medium mb-2">
-                Endereço
-              </label>
-              <textarea
-                id="endereco"
-                name="endereco"
-                value={formData.endereco}
-                onChange={handleInputChange}
-                rows={3}
-                className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                placeholder="Rua, número, bairro, cidade, estado"
               />
             </div>
 

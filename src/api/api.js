@@ -67,7 +67,7 @@ export const authAPI = {
 
 export const clienteAPI = {
   getPerfil: () => api.get("/cliente/perfil"),
-  atualizarPerfil: (data) => api.put("/cliente/perfil", data),
+  atualizarPerfil: (data) => api.put("/cliente/atualizar", data),
 }
 
 export const livrosAPI = {
