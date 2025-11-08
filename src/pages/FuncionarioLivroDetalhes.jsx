@@ -96,7 +96,7 @@ export const FuncionarioLivroDetalhes = () => {
     try {
       await livrosAPI.atualizar(id, {
         ...formData,
-        ano_publicacao: formData.anoPublicacao, // 👈 converte para o formato do backend
+        ano_publicacao: formData.anoPublicacao,
       })
       toast.success("Livro atualizado com sucesso!")
       setEditMode(false)

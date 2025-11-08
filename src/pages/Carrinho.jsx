@@ -1,12 +1,12 @@
 "use client"
 
-import { useNavigate } from "react-router-dom"
-import { useCart } from "../context/CartContext"
-import { useAuth } from "../auth/AuthProvider"
-import { vendaAPI } from "../api/api"
-import { toast } from "react-toastify"
-import { ShoppingCart, Trash2, CreditCard, ArrowLeft, Clock } from "lucide-react"
+import { ArrowLeft, Clock, CreditCard, ShoppingCart, Trash2 } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { vendaAPI } from "../api/api"
+import { useAuth } from "../auth/AuthProvider"
+import { useCart } from "../context/CartContext"
 
 export const Carrinho = () => {
   const { cart, rentalCart, removeFromCart, removeFromRental, clearCart, clearRentalCart } = useCart()
@@ -15,7 +15,7 @@ export const Carrinho = () => {
   const [loading, setLoading] = useState(false)
 
   const totalCompra = cart.reduce((sum, livro) => sum + livro.preco, 0)
-  const totalAluguel = rentalCart.reduce((sum, livro) => sum + livro.preco * 0.3, 0)
+  const totalAluguel = rentalCart.reduce((sum, livro) => sum + livro.preco, 0)
   const total = totalCompra + totalAluguel
 
   const handleFinalizarCompra = async () => {
@@ -156,7 +156,7 @@ export const Carrinho = () => {
                             >
                               <Trash2 className="h-5 w-5" />
                             </button>
-                            <span className="text-xl font-bold text-accent">R$ {(livro.preco * 0.3).toFixed(2)}</span>
+                            <span className="text-xl font-bold text-accent">R$ {(livro.preco).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>

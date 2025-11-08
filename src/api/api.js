@@ -95,19 +95,24 @@ export const livrosAPI = {
 
 export const vendaAPI = {
   vender: (clienteId, livroId) => api.post(`/venda/vender?email=${clienteId}&livroId=${livroId}`),
-  alugar: (clienteId, livroId) => api.post(`/venda/alugar?email=${clienteId}&livroId=${livroId}`),
+  alugar: (clienteEmail, livroId) => api.post(`/alugueis/alugar?email=${clienteEmail}&livroId=${livroId}`),
   getRelatorio: () => api.get("/venda/relatorio"),
   getRelatorioAluguel: () => api.get("/venda/relatorio-aluguel"),
 }
 
+export const aluguelAPI = {
+  getHistoricoAluguel: () => api.get("/alugueis/historico-aluguel"),
+}
+
+
 // Admin API endpoints for managing employees and clients
 export const adminAPI = {
   // Employee management
-  cadastrarFuncionario: (data) => api.post("/adm/funcionario/cadastro", data),
+  cadastrarFuncionario: (data) => api.post("/auth/cadastrar-funcionario", data),
   getFuncionarios: () => api.get("/adm/buscar-funcionario"),
-  deletarFuncionario: (id) => api.delete(`/admin/funcionario/deletar/${id}`),
+  deletarFuncionario: (id) => api.delete(`/adm/deletar/${id}`),
 
   // Client management
   getClientes: () => api.get("/adm/cliente"),
-  deletarCliente: (id) => api.delete(`/admin/cliente/deletar/${id}`),
+  deletarCliente: (id) => api.delete(`/adm/cliente/deletar/${id}`),
 }

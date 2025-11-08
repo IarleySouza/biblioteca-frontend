@@ -1,10 +1,10 @@
 "use client"
 
+import { Calendar, CreditCard, Lock, Mail, MapPin, Phone, User, UserPlus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { adminAPI } from "../../api/api"
 import { toast } from "react-toastify"
-import { UserPlus, Mail, Lock, User, Calendar, CreditCard, Phone, MapPin } from "lucide-react"
+import { adminAPI } from "../../api/api"
 
 export const CadastrarFuncionario = () => {
   const [formData, setFormData] = useState({
@@ -80,7 +80,7 @@ export const CadastrarFuncionario = () => {
         email: formData.email,
         senha: formData.senha,
         cpf: formData.cpf.replace(/\D/g, ""),
-        dataNascimento: formData.dataNascimento,
+        data_nascimento: formData.dataNascimento,
         dataAdmissao: formData.dataAdmissao,
         numeroTelefone: formData.numeroTelefone.replace(/\D/g, ""),
         endereco: formData.endereco,
