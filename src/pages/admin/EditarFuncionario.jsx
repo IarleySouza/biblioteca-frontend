@@ -13,7 +13,7 @@ export const EditarFuncionario = () => {
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
-        data_nascimento: "",
+        dataNascimento: "",
         dataAdmissao: "",
         numeroTelefone: "",
         endereco: "",
@@ -33,7 +33,7 @@ export const EditarFuncionario = () => {
             setFormData({
                 nome: func.nome || "",
                 email: func.email || "",
-                data_nascimento: func.data_nascimento || "",
+                data_nascimento: func.dataNascimento || "",
                 dataAdmissao: func.dataAdmissao || "",
                 numeroTelefone: func.numeroTelefone || "",
                 endereco: func.endereco || "",
@@ -55,7 +55,7 @@ export const EditarFuncionario = () => {
         try {
             await adminAPI.atualizarFuncionario(id, formData)
             toast.success("Funcionário atualizado com sucesso!")
-            navigate("/admin/gerenciar-funcionarios")
+            navigate("/admin/funcionarios")
         } catch (error) {
             toast.error("Erro ao atualizar funcionário")
         }
@@ -115,7 +115,7 @@ export const EditarFuncionario = () => {
                             <input
                                 type="date"
                                 name="data_nascimento"
-                                value={formData.data_nascimento}
+                                value={formData.dataNascimento}
                                 onChange={handleChange}
                                 className="w-full p-3 bg-card border border-border rounded-lg"
                             />

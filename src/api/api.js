@@ -112,7 +112,8 @@ export const adminAPI = {
   getFuncionarios: () => api.get("/adm/buscar-funcionario"),
   deletarFuncionario: (id) => api.delete(`/adm/deletar/${id}`),
   alterarStatusCliente: (id, status) => api.put(`/usuarios/alterarStatus/${id}?novoStatus=${status}`),
-  atualizarFuncionario: (id, data) => api.put(`/funcionario/atualizarDados/${id}`, data),
+  atualizarFuncionario: (id, data) => api.put(`/adm/atualizarDados/${id}`, data),
+  getFuncionarioById: (id) => api.get(`/adm/funcionario/${id}`),
 
   // Client management
   getClientes: () => api.get("/adm/cliente"),
