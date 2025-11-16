@@ -22,6 +22,7 @@ export const GerenciarClientes = () => {
   const fetchClientes = async () => {
     try {
       const response = await adminAPI.getClientes()
+      console.log("Clientes:", response.data)
       setClientes(response.data)
       setFilteredClientes(response.data)
     } catch (error) {
@@ -59,6 +60,7 @@ export const GerenciarClientes = () => {
 const handleDeactivate = async (cliente) => {
   // Se o cliente está ATIVO → vira INATIVO
   // Se está INATIVO → vira ATIVO
+  console.log("Cliente antes da alteração:", cliente);
   const novoStatus = cliente.statusCliente === "ATIVO" ? "INATIVO" : "ATIVO"
 
   const verboAcao = novoStatus === "INATIVO" ? "desativar" : "reativar"

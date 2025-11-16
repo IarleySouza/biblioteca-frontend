@@ -71,8 +71,9 @@ export const clienteAPI = {
 }
 
 export const livrosAPI = {
+  removerLivro: (id) => api.delete(`/meus/remover/${id}`),
   getAtivos: () => api.get("/livros/ativos"),
-  getMeusLivros: () => api.get("/cliente/meus-livros"),
+  getMeusLivros: () => api.get("/meus"),
   getById: (id) => api.get(`/livros/${id}`),
   cadastrar: (formData) =>
     api.post("/livros/cadastrar", formData, {
@@ -83,31 +84,41 @@ export const livrosAPI = {
   getFuncionarioLivros: () => api.get("/livros"),
   deletar: (id) => api.delete(`/livros/deletar/${id}`),
   getPdf: (id) => {
-  const token = localStorage.getItem("token")
-  return api.get(`/livros/pdf/${id}`, {
-    responseType: "blob",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-},
+    const token = localStorage.getItem("token")
+    return api.get(`/livros/pdf/${id}`, {
+      responseType: "blob",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  },
+  atualizarCapa: (id, file) => {
+    const formData = new FormData()
+    formData.append("capa", file)
+
+    return api.put(`/livros/${id}/capa`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  },
+  getStatusLivros: () => api.get("/livros/status"),
 }
 
 export const vendaAPI = {
   vender: (clienteId, livroId) => api.post(`/venda/vender?email=${clienteId}&livroId=${livroId}`),
   alugar: (clienteEmail, livroId) => api.post(`/alugueis/alugar?email=${clienteEmail}&livroId=${livroId}`),
   getRelatorio: () => api.get("/venda/relatorio"),
-  getRelatorioAluguel: () => api.get("/venda/relatorio-aluguel"),
 }
 
 export const aluguelAPI = {
+  getRelatorioAluguel: () => api.get("/venda/relatorio-aluguel"),
   getHistoricoAluguel: () => api.get("/alugueis/historico-aluguel"),
 }
 
 
 // Admin API endpoints for managing employees and clients
 export const adminAPI = {
-  // Employee management
   cadastrarFuncionario: (data) => api.post("/auth/cadastrar-funcionario", data),
   getFuncionarios: () => api.get("/adm/buscar-funcionario"),
   deletarFuncionario: (id) => api.delete(`/adm/deletar/${id}`),

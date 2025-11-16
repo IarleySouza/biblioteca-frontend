@@ -4,7 +4,7 @@ import { BarChart3, Book, TrendingUp, Users } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { adminAPI, livrosAPI, vendaAPI } from "../api/api"
+import { adminAPI, aluguelAPI, livrosAPI, vendaAPI } from "../api/api"
 
 
 export const ExecutiveDashboard = () => {
@@ -31,12 +31,51 @@ export const ExecutiveDashboard = () => {
     carregarDados()
   }, [])
 
+  function agruparLivrosPorGeneroCliente(vendas) {
+    const mapa = {}
+
+    vendas.forEach(({ livroGenero, clienteGenero }) => {
+      if (!livroGenero || !clienteGenero) return
+      if (!mapa[livroGenero]) {
+        mapa[livroGenero] = { nome: livroGenero, MASCULINO: 0, FEMININO: 0 }
+      }
+      mapa[livroGenero][clienteGenero] = (mapa[livroGenero][clienteGenero] || 0) + 1
+    })
+
+    return Object.values(mapa)
+  }
+  function faixaEtaria(idade) {
+    if (idade >= 18 && idade <= 25) return "18-25"
+    if (idade >= 26 && idade <= 35) return "26-35"
+    if (idade >= 36 && idade <= 50) return "36-50"
+    if (idade > 50) return "51+"
+    return "Outro"
+  }
+
+  function agruparLivrosPorIdade(vendas) {
+    const mapa = {}
+
+    vendas.forEach(({ livroGenero, clienteIdade }) => {
+      if (!livroGenero || !clienteIdade) return
+      const faixa = faixaEtaria(clienteIdade)
+      if (!mapa[livroGenero]) {
+        mapa[livroGenero] = { nome: livroGenero, "18-25": 0, "26-35": 0, "36-50": 0, "51+": 0 }
+      }
+      if (faixa !== "Outro") {
+        mapa[livroGenero][faixa] = (mapa[livroGenero][faixa] || 0) + 1
+      }
+    })
+
+    return Object.values(mapa)
+  }
+
+
   const carregarDados = async () => {
     try {
       const [funcRes, vendaRes, aluguelRes, livrosRes] = await Promise.allSettled([
         adminAPI.getFuncionarios(),
         vendaAPI.getRelatorio(),
-        vendaAPI.getRelatorioAluguel(),
+        aluguelAPI.getRelatorioAluguel(),
         livrosAPI.getFuncionarioLivros(),
       ])
 
@@ -44,6 +83,11 @@ export const ExecutiveDashboard = () => {
       const vendas = vendaRes.value?.data || []
       const alugueis = aluguelRes.value?.data || []
       const livros = livrosRes.value?.data || []
+      const livrosGeneroCliente = agruparLivrosPorGeneroCliente(vendas)
+      const livrosIdade = agruparLivrosPorIdade(vendas)
+      const statusRes = await livrosAPI.getStatusLivros();
+      const { ativos, inativos } = statusRes.data;
+
 
       const faturamentoMes = vendas
         .filter((v) => new Date(v.dataVenda).getMonth() === new Date().getMonth())
@@ -58,9 +102,6 @@ export const ExecutiveDashboard = () => {
         })
         .reduce((s, v) => s + v.preco, 0)
 
-      const ebooksAtivos = livros.filter((l) => l.ativo).length
-      const ebooksInativos = livros.filter((l) => !l.ativo).length
-
       const transacoes = {
         compra: vendas.length,
         locacao: alugueis.length,
@@ -74,8 +115,6 @@ export const ExecutiveDashboard = () => {
       const idiomasMock = [
         { name: "Português", value: 45 },
         { name: "Inglês", value: 30 },
-        { name: "Espanhol", value: 15 },
-        { name: "Francês", value: 10 },
       ]
 
       setDados({
@@ -84,8 +123,8 @@ export const ExecutiveDashboard = () => {
         faturamentoMes,
         faturamentoSemana,
         totalTitulos: livros.length,
-        ativos: ebooksAtivos,
-        inativos: ebooksInativos,
+        ativos,
+        inativos,
         transacoes,
       })
 
@@ -94,6 +133,8 @@ export const ExecutiveDashboard = () => {
       setVendasPorMes(vendasPorMes)
       setLivrosGenero(livrosGenero)
       setIdiomasMaisBuscados(idiomasMock)
+      setLivrosPorGeneroCliente(livrosGeneroCliente)
+      setLivrosPorIdade(livrosIdade)
     } catch (e) {
       toast.error("Erro ao carregar dados executivos.")
     }
@@ -185,8 +226,8 @@ export const ExecutiveDashboard = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="masculino" fill="#60a5fa" name="Masculino" />
-                <Bar dataKey="feminino" fill="#f472b6" name="Feminino" />
+                <Bar dataKey="MASCULINO" fill="#60a5fa" name="Masculino" />
+                <Bar dataKey="FEMININO" fill="#f472b6" name="Feminino" />
               </BarChart>
             </ResponsiveContainer>
           </ChartBox>
@@ -208,7 +249,7 @@ export const ExecutiveDashboard = () => {
           </ChartBox>
         </div>
 
-        
+
 
         {/* Top Vendas / Alugueis */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

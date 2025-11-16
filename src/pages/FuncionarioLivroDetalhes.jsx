@@ -9,6 +9,8 @@ import { livrosAPI } from "../api/api"
 export const FuncionarioLivroDetalhes = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [novaCapa, setNovaCapa] = useState(null);
+const [previewCapa, setPreviewCapa] = useState(null);
   const [livro, setLivro] = useState(null)
   const [loading, setLoading] = useState(true)
   const [editMode, setEditMode] = useState(false)
@@ -22,7 +24,7 @@ export const FuncionarioLivroDetalhes = () => {
     sinopse: "",
     idioma: "",
     preco: "",
-    ativo: true,
+    statusLivro: "ATIVO",
   })
 
   const generos = [
@@ -51,20 +53,22 @@ export const FuncionarioLivroDetalhes = () => {
   const fetchLivro = async () => {
     try {
       const response = await livrosAPI.getById(id)
+      console.log("Detalhes do livro:", response.data);
       setLivro({
-      ...response.data,
-      anoPublicacao: response.data.ano_publicacao,
-    })
+        ...response.data,
+        ano_publicacao: response.data.ano_publicacao,
+        statusLivro: response.data.statusLivro == "ATIVO",
+      })
       setFormData({
         titulo: response.data.titulo || "",
         autor: response.data.autor || "",
         editora: response.data.editora || "",
-        anoPublicacao: response.data.ano_publicacao || "",
+        ano_publicacao: response.data.ano_publicacao || "",
         genero: response.data.genero || "",
         sinopse: response.data.sinopse || "",
         idioma: response.data.idioma || "",
         preco: response.data.preco || "",
-        ativo: response.data.ativo ?? true,
+        statusLivro: response.data.statusLivro,
       })
     } catch (error) {
       toast.error("Erro ao carregar detalhes do livro")
@@ -96,7 +100,7 @@ export const FuncionarioLivroDetalhes = () => {
     try {
       await livrosAPI.atualizar(id, {
         ...formData,
-        ano_publicacao: formData.anoPublicacao,
+        ano_publicacao: formData.ano_publicacao,
       })
       toast.success("Livro atualizado com sucesso!")
       setEditMode(false)
@@ -109,12 +113,28 @@ export const FuncionarioLivroDetalhes = () => {
   const handleToggleStatus = async () => {
     try {
       await livrosAPI.toggleStatus(id)
-      toast.success(`Livro ${livro.ativo ? "desativado" : "ativado"} com sucesso!`)
+      toast.success(`Livro ${livro.statusLivro ? "desativado" : "ativado"} com sucesso!`)
       fetchLivro()
     } catch (error) {
       toast.error("Erro ao alterar status do livro")
     }
   }
+  const handleUpdateCapa = async () => {
+  if (!novaCapa) {
+    toast.error("Selecione uma imagem primeiro");
+    return;
+  }
+
+  try {
+    await livrosAPI.atualizarCapa(id, novaCapa);
+    toast.success("Capa atualizada com sucesso!");
+    setNovaCapa(null);
+    setPreviewCapa(null);
+    fetchLivro();
+  } catch (error) {
+    toast.error("Erro ao atualizar capa");
+  }
+};
 
   if (loading) {
     return (
@@ -144,13 +164,13 @@ export const FuncionarioLivroDetalhes = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={handleToggleStatus}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${livro.ativo
-                  ? "bg-muted text-muted-foreground hover:bg-muted/80"
-                  : "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${livro.statusLivro
+                ? "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-green-500/10 text-green-500 hover:bg-green-500/20"
                 }`}
             >
               <Power className="h-4 w-4" />
-              {livro.ativo ? "Desativar" : "Ativar"}
+              {livro.statusLivro ? "Desativar" : "Ativar"}
             </button>
             {!editMode ? (
               <button
@@ -186,8 +206,16 @@ export const FuncionarioLivroDetalhes = () => {
           <div className="lg:col-span-1">
             <div className="bg-card border border-border rounded-xl p-6 sticky top-8">
               {/* Book Cover */}
-              <div className="aspect-[3/4] overflow-hidden">
-                {livro.capaPath ? (
+              <div className="aspect-[3/4] overflow-hidden relative">
+
+                {/* Preview da capa nova (enquanto edita) */}
+                {previewCapa ? (
+                  <img
+                    src={previewCapa}
+                    alt="Preview da nova capa"
+                    className="w-full h-full object-cover opacity-90"
+                  />
+                ) : livro.capaPath ? (
                   <img
                     src={`http://localhost:8080/livros/capa/${livro.capaPath}`}
                     alt={livro.titulo}
@@ -198,11 +226,40 @@ export const FuncionarioLivroDetalhes = () => {
                     <BookOpen className="h-16 w-16 text-primary/40" />
                   </div>
                 )}
+
+                {/* Upload disponível somente no modo edição */}
+                {editMode && (
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                    <label className="cursor-pointer bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary/90 transition">
+                      Selecionar nova capa
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          setNovaCapa(file);
+                          setPreviewCapa(URL.createObjectURL(file));
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
+
+              {/* Botão para enviar a nova capa */}
+              {editMode && novaCapa && (
+                <button
+                  onClick={handleUpdateCapa}
+                  className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                  Atualizar capa
+                </button>
+              )}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Status</span>
-                  {livro.ativo ? (
+                  {livro.statusLivro ? (
                     <span className="text-xs px-2 py-1 bg-green-500/10 text-green-500 rounded-full">Ativo</span>
                   ) : (
                     <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded-full">Inativo</span>
@@ -263,7 +320,7 @@ export const FuncionarioLivroDetalhes = () => {
                       <label className="block text-sm font-medium mb-2">Ano</label>
                       <input
                         type="number"
-                        name="anoPublicacao"
+                        name="ano_publicacao"
                         value={formData.ano_publicacao}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
@@ -324,10 +381,15 @@ export const FuncionarioLivroDetalhes = () => {
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      id="ativo"
-                      name="ativo"
-                      checked={formData.ativo}
-                      onChange={handleInputChange}
+                      id="statusLivro"
+                      name="statusLivro"
+                      checked={formData.statusLivro == "ATIVO"}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          statusLivro: e.target.checked ? "ATIVO" : "INATIVO"
+                        })
+                      }
                       className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-2 focus:ring-ring"
                     />
                     <label htmlFor="ativo" className="text-sm font-medium">
@@ -352,7 +414,7 @@ export const FuncionarioLivroDetalhes = () => {
                       <Calendar className="h-5 w-5 text-primary" />
                       <div>
                         <p className="text-sm text-muted-foreground">Ano de Publicação</p>
-                        <p className="font-medium">{livro.anoPublicacao || "Não informado"}</p>
+                        <p className="font-medium">{livro.ano_publicacao || "Não informado"}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg">

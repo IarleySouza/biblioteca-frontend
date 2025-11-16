@@ -29,6 +29,7 @@ export const Home = () => {
   const fetchLivros = async () => {
     try {
       const response = await livrosAPI.getAtivos()
+      console.log(response.data)
       setLivros(response.data)
       setFilteredLivros(response.data)
     } catch (error) {
@@ -94,8 +95,8 @@ export const Home = () => {
     navigate(`/livro/${livroId}`)
   }
 
-  const generos = ["all", ...new Set(livros.map((l) => l.genero))]
-
+  const generos = ["all", ...new Set((livros || []).map((l) => l.genero))];
+  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
