@@ -1,7 +1,7 @@
 import axios from "axios"
 import { toast } from "react-toastify"
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://3.87.116.207:8080"
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://54.173.157.56:8080"
 
 console.log("API Base URL:",  import.meta.env.VITE_API_URL)
 
